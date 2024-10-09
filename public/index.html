@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Распознавание текста с Tesseract.js</title>
+</head>
+<body>
+    <h1>Распознавание текста на русском языке</h1>
+    <input type="file" id="fileInput" accept="image/*">
+    <button id="uploadBtn">Загрузить и распознать текст</button>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('uploadBtn').addEventListener('click', () => {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                alert('Пожалуйста, выберите изображение.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = data.text;
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Ошибка загрузки или распознавания.');
+            });
+        });
+    </script>
+</body>
+</html>
